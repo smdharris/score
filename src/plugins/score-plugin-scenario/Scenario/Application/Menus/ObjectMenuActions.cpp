@@ -266,12 +266,14 @@ ObjectMenuActions::ObjectMenuActions(ScenarioApplicationPlugin* parent)
   if (parent->context.mainWindow)
   {
     auto doc
-        = parent->context.mainWindow->centralWidget()->findChild<QWidget*>(
+        = parent->context.mainWindow->findChild<QWidget*>(
             "Documents", Qt::FindDirectChildrenOnly);
-    SCORE_ASSERT(doc);
-    doc->addAction(m_removeElements);
-    doc->addAction(m_pasteElements);
-    doc->addAction(m_goToParent);
+    if(doc)
+    {
+      doc->addAction(m_removeElements);
+      doc->addAction(m_pasteElements);
+      doc->addAction(m_goToParent);
+    }
   }
 }
 

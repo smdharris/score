@@ -102,6 +102,7 @@ include(3rdparty/libossia.cmake)
 enable_testing()
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ScoreFunctions.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ScoreConfiguration.cmake")
+add_subdirectory(3rdparty/KDDockWidgets)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

@@ -40,7 +40,7 @@
 #include <QString>
 #include <QStringList>
 #include <qnamespace.h>
-
+#include <Config.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_sinks.h>
 
@@ -251,6 +251,11 @@ void Application::init()
     score::setQApplicationSettings(*qApp);
     m_settings.setupView();
     m_projectSettings.setupView();
+
+    auto flags =
+        KDDockWidgets::Config::Flag_HideTitleBarWhenTabsVisible | KDDockWidgets::Config::Flag_AlwaysShowTabs;
+
+    KDDockWidgets::Config::self().setFlags(flags);
     m_view = new score::View{this};
   }
 

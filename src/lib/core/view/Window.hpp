@@ -7,12 +7,16 @@
 #include <QMainWindow>
 #include <QPair>
 #include <QString>
+#include <MainWindow.h>
 
 #include <score_lib_base_export.h>
 
 #include <vector>
 #include <verdigris>
-
+namespace KDDockWidgets
+{
+class DockWidget;
+}
 class QCloseEvent;
 class QDockWidget;
 class QEvent;
@@ -30,7 +34,7 @@ struct ApplicationContext;
 /**
  * @brief The main display of the application.
  */
-class SCORE_LIB_BASE_EXPORT View final : public QMainWindow
+class SCORE_LIB_BASE_EXPORT View final : public KDDockWidgets::MainWindow
 {
   W_OBJECT(View)
 public:
@@ -66,8 +70,8 @@ private:
   void resizeEvent(QResizeEvent*) override;
 
   std::map<QWidget*, DocumentView*> m_documents;
-  std::vector<QPair<PanelDelegate*, QDockWidget*>> m_leftPanels;
-  std::vector<QPair<PanelDelegate*, QDockWidget*>> m_rightPanels;
+  std::vector<QPair<PanelDelegate*, KDDockWidgets::DockWidget*>> m_leftPanels;
+  std::vector<QPair<PanelDelegate*, KDDockWidgets::DockWidget*>> m_rightPanels;
 
   Presenter* m_presenter{};
   QTabWidget* m_tabWidget{};
