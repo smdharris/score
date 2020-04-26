@@ -84,8 +84,8 @@ SCORE_LIB_PROCESS_EXPORT void
 JSONObjectReader::read<Process::MinMaxFloatOutlet>(const Process::MinMaxFloatOutlet& p)
 {
   // read((Process::Inlet&)p);
-  obj["MinInlet"] = toJsonObject(*p.minInlet);
-  obj["MaxInlet"] = toJsonObject(*p.maxInlet);
+  obj["MinInlet"] = *p.minInlet;
+  obj["MaxInlet"] = *p.maxInlet;
 }
 
 template <>
@@ -95,11 +95,11 @@ JSONObjectWriter::write<Process::MinMaxFloatOutlet>(Process::MinMaxFloatOutlet& 
   static auto& il = components.interfaces<Process::PortFactoryList>();
 
   {
-    JSONObjectWriter writer{obj["MinInlet"].toObject()};
+    JSONObjectWriter writer{obj["MinInlet"]};
     p.minInlet.reset((Process::FloatSlider*)deserialize_interface(il, writer, &p));
   }
   {
-    JSONObjectWriter writer{obj["MaxInlet"].toObject()};
+    JSONObjectWriter writer{obj["MaxInlet"]};
     p.maxInlet.reset((Process::FloatSlider*)deserialize_interface(il, writer, &p));
   }
 }

@@ -243,8 +243,8 @@ void DataStreamWriter::write(Metronome::ProcessModel& autom)
 template <>
 void JSONObjectReader::read(const Metronome::ProcessModel& autom)
 {
-  obj["Outlet"] = toJsonObject(*autom.outlet);
-  obj["Curve"] = toJsonObject(autom.curve());
+  obj["Outlet"] = *autom.outlet;
+  obj["Curve"] = autom.curve();
   obj[strings.Min] = autom.min();
   obj[strings.Max] = autom.max();
 }
@@ -252,10 +252,10 @@ void JSONObjectReader::read(const Metronome::ProcessModel& autom)
 template <>
 void JSONObjectWriter::write(Metronome::ProcessModel& autom)
 {
-  JSONObjectWriter writer{obj["Outlet"].toObject()};
+  JSONObjectWriter writer{obj["Outlet"]};
   autom.outlet = Process::load_value_outlet(writer, &autom);
 
-  JSONObject::Deserializer curve_deser{obj["Curve"].toObject()};
+  JSONObject::Deserializer curve_deser{obj["Curve"]};
   autom.setCurve(new Curve::Model{curve_deser, &autom});
 
   autom.setMin(obj[strings.Min].toDouble());

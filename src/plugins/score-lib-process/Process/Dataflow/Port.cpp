@@ -853,20 +853,28 @@ SCORE_LIB_PROCESS_EXPORT void
 JSONObjectReader::read<Process::Port>(const Process::Port& p)
 {
   obj["Hidden"] = (bool)p.hidden;
-  obj["Custom"] = p.m_customData;
-  obj["Exposed"] = p.m_exposed;
-  obj["Description"] = p.m_description;
-  obj["Address"] = toJsonObject(p.m_address);
+  if(!p.m_customData.isEmpty())
+    obj["Custom"] = p.m_customData;
+  if(!p.m_exposed.isEmpty())
+    obj["Exposed"] = p.m_exposed;
+  if(!p.m_description.isEmpty())
+    obj["Description"] = p.m_description;
+  if(!(p.m_address.address.path.isEmpty() || p.m_address.address.device.isEmpty()))
+    obj["Address"] = p.m_address;
 }
 template <>
 SCORE_LIB_PROCESS_EXPORT void
 JSONObjectWriter::write<Process::Port>(Process::Port& p)
 {
   p.hidden = obj["Hidden"].toBool();
-  p.m_customData = obj["Custom"].toString();
-  p.m_exposed = obj["Exposed"].toString();
-  p.m_description = obj["Description"].toString();
-  p.m_address = fromJsonObject<State::AddressAccessor>(obj["Address"]);
+  if(auto it = obj.tryGet("Custom"))
+    p.m_customData = it->toString();
+  if(auto it = obj.tryGet("Exposed"))
+    p.m_exposed = it->toString();
+  if(auto it = obj.tryGet("Description"))
+    p.m_description = it->toString();
+  if(auto it = obj.tryGet("Address"))
+    p.m_address <<= *it;
 }
 
 template <>
@@ -963,15 +971,15 @@ SCORE_LIB_PROCESS_EXPORT void
 JSONObjectReader::read<Process::ControlInlet>(const Process::ControlInlet& p)
 {
   // read((Process::Inlet&)p);
-  obj[strings.Value] = toJsonObject(p.m_value);
-  obj[strings.Domain] = toJsonObject(p.m_domain);
+  obj[strings.Value] = p.m_value;
+  obj[strings.Domain] = p.m_domain;
 }
 template <>
 SCORE_LIB_PROCESS_EXPORT void
 JSONObjectWriter::write<Process::ControlInlet>(Process::ControlInlet& p)
 {
-  p.m_value = fromJsonObject<ossia::value>(obj[strings.Value]);
-  p.m_domain = fromJsonObject<State::Domain>(obj[strings.Domain].toObject());
+  p.m_value <<= obj[strings.Value];
+  p.m_domain <<= obj[strings.Domain];
 }
 
 template <>
@@ -1021,11 +1029,11 @@ SCORE_LIB_PROCESS_EXPORT void
 JSONObjectReader::read<Process::AudioOutlet>(const Process::AudioOutlet& p)
 {
   // read((Process::Outlet&)p);
-  obj["GainInlet"] = toJsonObject(*p.gainInlet);
-  obj["PanInlet"] = toJsonObject(*p.panInlet);
+  obj["GainInlet"] = *p.gainInlet;
+  obj["PanInlet"] = *p.panInlet;
 
   obj["Gain"] = p.m_gain;
-  obj["Pan"] = toJsonValueArray(p.m_pan);
+  obj["Pan"] = p.m_pan;
   obj["Propagate"] = p.m_propagate;
 
 }
@@ -1034,16 +1042,16 @@ SCORE_LIB_PROCESS_EXPORT void
 JSONObjectWriter::write<Process::AudioOutlet>(Process::AudioOutlet& p)
 {
   {
-    JSONObjectWriter writer{obj["GainInlet"].toObject()};
+    JSONObjectWriter writer{obj["GainInlet"]};
     p.gainInlet = Process::load_control_inlet(writer, &p);
   }
   {
-    JSONObjectWriter writer{obj["PanInlet"].toObject()};
+    JSONObjectWriter writer{obj["PanInlet"]};
     p.panInlet = Process::load_control_inlet(writer, &p);
   }
 
   p.m_gain = obj["Gain"].toDouble();
-  p.m_pan = fromJsonValueArray<ossia::small_vector<double, 2>>(obj["Pan"].toArray());
+  p.m_pan <<= obj["Pan"];
   p.m_propagate = obj["Propagate"].toBool();
 }
 
@@ -1092,15 +1100,15 @@ SCORE_LIB_PROCESS_EXPORT void
 JSONObjectReader::read<Process::ControlOutlet>(const Process::ControlOutlet& p)
 {
   // read((Process::Outlet&)p);
-  obj[strings.Value] = toJsonValue(p.m_value);
-  obj[strings.Domain] = toJsonObject(p.m_domain);
+  obj[strings.Value] = p.m_value;
+  obj[strings.Domain] = p.m_domain;
 }
 template <>
 SCORE_LIB_PROCESS_EXPORT void
 JSONObjectWriter::write<Process::ControlOutlet>(Process::ControlOutlet& p)
 {
-  p.m_value = fromJsonValue<ossia::value>(obj[strings.Value]);
-  p.m_domain = fromJsonObject<State::Domain>(obj[strings.Domain].toObject());
+  p.m_value <<= obj[strings.Value];
+  p.m_domain <<= obj[strings.Domain];
 }
 
 template <>

@@ -32,6 +32,6 @@ template <>
 void JSONObjectWriter::write(Protocols::OSCQuerySpecificSettings& n)
 {
   n.host = obj["Host"].toString();
-  if (obj.contains("Rate"))
-    n.rate = obj["Rate"].toInt();
+  if (auto it = obj.tryGet("Rate"))
+    n.rate = it->toInt();
 }

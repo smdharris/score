@@ -39,7 +39,7 @@ void DataStreamWriter::write(Scenario::CommentBlockModel& comment)
 template <>
 void JSONObjectReader::read(const Scenario::CommentBlockModel& comment)
 {
-  obj["Date"] = toJsonValue(comment.m_date);
+  obj["Date"] = comment.m_date;
   obj["HeightPercentage"] = comment.m_yposition;
   obj["HTMLContent"] = comment.m_HTMLcontent;
 }
@@ -47,7 +47,7 @@ void JSONObjectReader::read(const Scenario::CommentBlockModel& comment)
 template <>
 void JSONObjectWriter::write(Scenario::CommentBlockModel& comment)
 {
-  comment.m_date = fromJsonValue<TimeVal>(obj["Date"]);
+  comment.m_date <<= obj["Date"];
   comment.m_yposition = obj["HeightPercentage"].toDouble();
   comment.m_HTMLcontent = obj["HTMLContent"].toString();
 }

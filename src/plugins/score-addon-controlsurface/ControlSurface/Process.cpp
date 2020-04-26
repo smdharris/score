@@ -229,14 +229,14 @@ void DataStreamWriter::write(ControlSurface::Model& proc)
 template <>
 void JSONObjectReader::read(const ControlSurface::Model& proc)
 {
-  readPorts(obj, proc.m_inlets, proc.m_outlets);
+  readPorts(*this, proc.m_inlets, proc.m_outlets);
 }
 
 template <>
 void JSONObjectWriter::write(ControlSurface::Model& proc)
 {
   writePorts(
-      obj,
+      *this,
       components.interfaces<Process::PortFactoryList>(),
       proc.m_inlets,
       proc.m_outlets,

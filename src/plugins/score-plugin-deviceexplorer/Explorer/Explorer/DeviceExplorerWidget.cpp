@@ -58,7 +58,6 @@
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QIcon>
-#include <QJsonDocument>
 #include <QKeySequence>
 #include <QLabel>
 #include <QLineEdit>
@@ -982,6 +981,8 @@ void DeviceExplorerWidget::addDevice()
 }
 void DeviceExplorerWidget::exportDevice()
 {
+  SCORE_ABORT;
+  /*
   auto indexes = m_ntView->selectedIndexes();
 
   if (indexes.size() != 1)
@@ -999,6 +1000,7 @@ void DeviceExplorerWidget::exportDevice()
   {
     f.write(txt);
   }
+  */
 }
 
 void DeviceExplorerWidget::addChild()

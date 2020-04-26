@@ -106,8 +106,8 @@ void AddOnlyProcessToInterval::deserializeImpl(DataStreamOutput& s)
 LoadOnlyProcessInInterval::LoadOnlyProcessInInterval(
     const IntervalModel& cst,
     Id<Process::ProcessModel> processId,
-    const QJsonObject& dat)
-    : m_path{cst}, m_createdProcessId{std::move(processId)}, m_data{dat}
+    const rapidjson::Value& dat)
+    : m_path{cst}, m_createdProcessId{std::move(processId)}, m_data{clone(dat)}
 {
 }
 
@@ -130,6 +130,9 @@ Process::ProcessModel& LoadOnlyProcessInInterval::redo(
     IntervalModel& interval,
     const score::DocumentContext& ctx) const
 {
+  SCORE_ABORT;
+  throw;
+  /*
 
   // Create process model
   auto obj = m_data[score::StringConstant().Process].toObject();
@@ -152,6 +155,7 @@ Process::ProcessModel& LoadOnlyProcessInInterval::redo(
 
   AddProcess(interval, proc);
   return *proc;
+  */
 }
 
 void LoadOnlyProcessInInterval::serializeImpl(DataStreamInput& s) const

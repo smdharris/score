@@ -9,28 +9,6 @@
 class AbstractVisitor
 {
 };
-
-template <typename VisitorType>
-class Visitor : public AbstractVisitor
-{
-};
-
-template <typename T>
-class Reader
-{
-};
-
-template <typename T>
-class Writer
-{
-};
-
-template <typename T>
-using Serializer = Visitor<Reader<T>>;
-
-template <typename T>
-using Deserializer = Visitor<Writer<T>>;
-
 template <typename Serializer_T, typename T, typename Enable = void>
 struct TSerializer;
 
@@ -63,20 +41,15 @@ using enable_if_deserializer = typename std::enable_if_t<
   friend class ::DataStreamReader; \
   friend class ::DataStreamWriter; \
   friend class ::JSONObjectReader; \
-  friend class ::JSONObjectWriter; \
-  friend class ::JSONValueReader;  \
-  friend class ::JSONValueWriter;
+  friend class ::JSONObjectWriter;
 
 class DataStream;
 class JSONObject;
-class JSONValue;
+//class JSONValue;
 class DataStreamReader;
 class DataStreamWriter;
 class JSONObjectReader;
 class JSONObjectWriter;
-class JSONValueReader;
-class JSONValueWriter;
-
 class DataStream
 {
 public:
@@ -84,19 +57,11 @@ public:
   using Deserializer = DataStreamWriter;
   static constexpr SerializationIdentifier type() { return 2; }
 };
+
 class JSONObject
 {
 public:
   using Serializer = JSONObjectReader;
   using Deserializer = JSONObjectWriter;
   static constexpr SerializationIdentifier type() { return 1; }
-};
-class JSONValue
-{
-public:
-  using Serializer = JSONValueReader;
-  using Deserializer = JSONValueWriter;
-
-  // TODO this one isn't part of serialize_dyn, etc.
-  static constexpr SerializationIdentifier type() { return 3; }
 };

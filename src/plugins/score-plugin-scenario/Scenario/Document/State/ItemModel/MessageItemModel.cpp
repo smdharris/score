@@ -22,7 +22,6 @@
 
 #include <QFile>
 #include <QFileInfo>
-#include <QJsonDocument>
 #include <QMimeData>
 #include <QObject>
 #include <QString>
@@ -234,6 +233,9 @@ bool MessageItemModel::dropMimeData(
     int column,
     const QModelIndex& parent)
 {
+  SCORE_ABORT;
+  return {};
+  /*
   if (action == Qt::IgnoreAction)
   {
     return true;
@@ -283,6 +285,7 @@ bool MessageItemModel::dropMimeData(
           .submit(cmd);
     }
   }
+  */
   return false;
 }
 

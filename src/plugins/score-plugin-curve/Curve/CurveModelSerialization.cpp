@@ -66,7 +66,7 @@ template <>
 SCORE_PLUGIN_CURVE_EXPORT void
 JSONObjectReader::read(const Curve::Model& curve)
 {
-  obj[strings.Segments] = toJsonArray(curve.segments());
+  obj[strings.Segments] = curve.segments();
 }
 
 template <>
@@ -76,7 +76,7 @@ SCORE_PLUGIN_CURVE_EXPORT void JSONObjectWriter::write(Curve::Model& curve)
   const auto& segments = obj[strings.Segments].toArray();
   for (const auto& segment : segments)
   {
-    JSONObject::Deserializer segment_deser{segment.toObject()};
+    JSONObject::Deserializer segment_deser{segment};
     auto seg = deserialize_interface(csl, segment_deser, &curve);
     if (seg)
       curve.addSegment(seg);

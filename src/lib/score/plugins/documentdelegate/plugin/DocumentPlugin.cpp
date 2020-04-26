@@ -36,15 +36,6 @@ DocumentPluginFactoryList::object_type* DocumentPluginFactoryList::loadMissing(
   SCORE_TODO;
   return nullptr;
 }
-
-void SerializableDocumentPlugin::serializeAfterDocument(
-    const VisitorVariant& vis) const
-{
-}
-
-void SerializableDocumentPlugin::reloadAfterDocument(const VisitorVariant& vis)
-{
-}
 }
 
 template <>

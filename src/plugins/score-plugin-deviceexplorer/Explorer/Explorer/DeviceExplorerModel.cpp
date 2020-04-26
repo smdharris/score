@@ -39,7 +39,6 @@
 
 #include <QAbstractProxyModel>
 #include <QApplication>
-#include <QJsonDocument>
 #include <QMap>
 #include <QMimeData>
 #include <QObject>
@@ -797,6 +796,8 @@ bool DeviceExplorerModel::dropMimeData(
     int column,
     const QModelIndex& parent)
 {
+  SCORE_ABORT;
+  /*
   if (action == Qt::IgnoreAction)
   {
     return true;
@@ -871,7 +872,7 @@ bool DeviceExplorerModel::dropMimeData(
 
     return true;
   }
-
+  */
   return false;
 }
 

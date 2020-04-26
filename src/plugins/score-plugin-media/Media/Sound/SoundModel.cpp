@@ -196,7 +196,7 @@ template <>
 void JSONObjectReader::read(const Media::Sound::ProcessModel& proc)
 {
   obj["File"] = proc.m_file->originalFile();
-  obj["Outlet"] = toJsonObject(*proc.outlet);
+  obj["Outlet"] = *proc.outlet;
   obj["Upmix"] = proc.m_upmixChannels;
   obj["Start"] = proc.m_startChannel;
   obj["Mode"] = (int)proc.m_mode;
@@ -207,7 +207,7 @@ template <>
 void JSONObjectWriter::write(Media::Sound::ProcessModel& proc)
 {
   proc.setFile(obj["File"].toString());
-  JSONObjectWriter writer{obj["Outlet"].toObject()};
+  JSONObjectWriter writer{obj["Outlet"]};
   proc.outlet = Process::load_audio_outlet(writer, &proc);
   proc.m_upmixChannels = obj["Upmix"].toInt();
   proc.m_startChannel = obj["Start"].toInt();

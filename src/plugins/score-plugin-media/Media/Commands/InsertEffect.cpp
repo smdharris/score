@@ -54,11 +54,11 @@ void InsertEffect::deserializeImpl(DataStreamOutput& s)
 
 LoadEffect::LoadEffect(
     const Media::ChainProcess& model,
-    const QJsonObject& data,
+    const rapidjson::Value& data,
     std::size_t effectPos)
     : m_path{model}
     , m_id{getStrongId(model.effects())}
-    , m_data{data}
+    , m_data{clone(data)}
     , m_pos{effectPos}
 {
 }
@@ -72,6 +72,8 @@ void LoadEffect::undo(const score::DocumentContext& ctx) const
 
 void LoadEffect::redo(const score::DocumentContext& ctx) const
 {
+  SCORE_ABORT;
+  /*
   auto& echain = m_path.find(ctx);
 
   // Create process model
@@ -95,6 +97,7 @@ void LoadEffect::redo(const score::DocumentContext& ctx) const
   score::IDocument::changeObjectId(*fx, m_id);
 
   echain.insertEffect(fx, m_pos);
+  */
 }
 
 void LoadEffect::serializeImpl(DataStreamInput& s) const

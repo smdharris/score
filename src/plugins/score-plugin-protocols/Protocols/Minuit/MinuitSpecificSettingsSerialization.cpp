@@ -38,6 +38,6 @@ void JSONObjectWriter::write(Protocols::MinuitSpecificSettings& n)
   n.outputPort = obj["OutPort"].toInt();
   n.host = obj["Host"].toString();
   n.localName = obj["LocalName"].toString();
-  if (obj.contains("Rate"))
-    n.rate = obj["Rate"].toInt();
+  if (auto it = obj.tryGet("Rate"))
+    n.rate = it->toInt();
 }

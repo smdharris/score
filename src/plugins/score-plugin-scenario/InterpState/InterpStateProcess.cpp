@@ -95,12 +95,12 @@ void DataStreamWriter::write(InterpState::ProcessModel& interp)
 template <>
 void JSONObjectReader::read(const InterpState::ProcessModel& interp)
 {
-  obj["Curve"] = toJsonObject(interp.curve());
+  obj["Curve"] = interp.curve();
 }
 
 template <>
 void JSONObjectWriter::write(InterpState::ProcessModel& interp)
 {
-  JSONObject::Deserializer curve_deser{obj["Curve"].toObject()};
+  JSONObject::Deserializer curve_deser{obj["Curve"]};
   interp.setCurve(new Curve::Model{curve_deser, &interp});
 }

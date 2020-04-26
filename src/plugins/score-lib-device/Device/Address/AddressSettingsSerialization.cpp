@@ -42,10 +42,9 @@ void JSONObjectReader::read(const Device::AddressSettingsCommon& n)
   obj[strings.RepetitionFilter] = static_cast<bool>(n.repetitionFilter);
 
   // Value, domain and type
-  readFrom(n.value);
-  obj[strings.Domain] = toJsonObject(n.domain);
-
-  obj[strings.Extended] = toJsonObject(n.extendedAttributes);
+  obj[strings.Value] = n.value;
+  obj[strings.Domain] = n.domain;
+  obj[strings.Extended] = n.extendedAttributes;
 }
 
 template <>
@@ -60,10 +59,10 @@ void JSONObjectWriter::write(Device::AddressSettingsCommon& n)
   n.repetitionFilter
       = (ossia::repetition_filter)obj[strings.RepetitionFilter].toBool();
 
-  writeTo(n.value);
-  n.domain = fromJsonObject<State::Domain>(obj[strings.Domain].toObject());
+  n.value <<= obj[strings.Value];
+  n.domain <<= obj[strings.Domain];
 
-  n.extendedAttributes = fromJsonObject<score::any_map>(obj[strings.Extended]);
+  n.extendedAttributes <<= obj[strings.Extended];
 }
 
 template <>
@@ -90,8 +89,10 @@ template <>
 SCORE_LIB_DEVICE_EXPORT void
 JSONObjectReader::read(const Device::AddressSettings& n)
 {
+  stream.StartObject();
   readFrom(static_cast<const Device::AddressSettingsCommon&>(n));
   obj[strings.Name] = n.name;
+  stream.EndObject();
 }
 
 template <>
@@ -126,8 +127,10 @@ template <>
 SCORE_LIB_DEVICE_EXPORT void
 JSONObjectReader::read(const Device::FullAddressSettings& n)
 {
+  stream.StartObject();
   readFrom(static_cast<const Device::AddressSettingsCommon&>(n));
-  obj[strings.Address] = toJsonObject(n.address);
+  obj[strings.Address] = n.address;
+  stream.EndObject();
 }
 
 template <>
@@ -135,7 +138,7 @@ SCORE_LIB_DEVICE_EXPORT void
 JSONObjectWriter::write(Device::FullAddressSettings& n)
 {
   writeTo(static_cast<Device::AddressSettingsCommon&>(n));
-  n.address = fromJsonObject<State::Address>(obj[strings.Address]);
+  n.address <<= obj[strings.Address];
 }
 
 template <>
@@ -158,6 +161,7 @@ template <>
 SCORE_LIB_DEVICE_EXPORT void
 JSONObjectReader::read(const Device::FullAddressAccessorSettings& n)
 {
+  stream.StartObject();
   // Metadata
   if (n.ioType)
     obj[strings.ioType] = Device::AccessModeText()[*n.ioType];
@@ -166,11 +170,12 @@ JSONObjectReader::read(const Device::FullAddressAccessorSettings& n)
   obj[strings.RepetitionFilter] = static_cast<bool>(n.repetitionFilter);
 
   // Value, domain and type
-  readFrom(n.value);
-  obj[strings.Domain] = toJsonObject(n.domain);
-  obj[strings.Extended] = toJsonObject(n.extendedAttributes);
+  obj[strings.Value] = n.value;
+  obj[strings.Domain] = n.domain;
+  obj[strings.Extended] = n.extendedAttributes;
 
-  obj[strings.Address] = toJsonObject(n.address);
+  obj[strings.Address] = n.address;
+  stream.EndObject();
 }
 
 template <>
@@ -184,10 +189,8 @@ JSONObjectWriter::write(Device::FullAddressAccessorSettings& n)
   n.repetitionFilter
       = (ossia::repetition_filter)obj[strings.RepetitionFilter].toBool();
 
-  writeTo(n.value);
-
-  n.domain = fromJsonObject<State::Domain>(obj[strings.Domain].toObject());
-  n.extendedAttributes = fromJsonObject<score::any_map>(obj[strings.Extended]);
-
-  n.address = fromJsonObject<State::AddressAccessor>(obj[strings.Address]);
+  n.value <<= obj[strings.Value];
+  n.domain <<= obj[strings.Domain];
+  n.extendedAttributes <<= obj[strings.Extended];
+  n.address <<= obj[strings.Address];
 }

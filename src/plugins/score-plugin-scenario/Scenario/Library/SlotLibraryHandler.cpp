@@ -71,14 +71,11 @@ bool SlotLibraryHandler::onDrop(
   auto file = model.fileInfo(parent);
 
   auto json
-      = QJsonDocument::fromJson(mime.data(score::mime::layerdata())).object();
+      = readJson(mime.data(score::mime::layerdata()));
 
   QString path = file.isDir() ? file.absoluteFilePath() : file.absolutePath();
 
-  auto basename = json["Process"]
-                      .toObject()["Metadata"]
-                      .toObject()["ScriptingName"]
-                      .toString();
+  auto basename = JsonValue{json["Process"]["Metadata"]["ScriptingName"]}.toString();
   if (basename.isEmpty())
     basename = "Process";
 
@@ -86,8 +83,8 @@ bool SlotLibraryHandler::onDrop(
 
   if (QFile f(filename); f.open(QIODevice::WriteOnly))
   {
-    json.remove("PID");
-    f.write(QJsonDocument{json}.toJson());
+    json.RemoveMember("PID");
+    f.write(jsonToByteArray(json));
   }
 
   return true;
@@ -110,6 +107,10 @@ bool ScenarioLibraryHandler::onDrop(
     int column,
     const QModelIndex& parent)
 {
+
+  SCORE_ABORT;
+  return {};
+  /*
   if (mime.hasFormat(score::mime::scenariodata()))
   {
     auto file = model.fileInfo(parent);
@@ -161,7 +162,7 @@ bool ScenarioLibraryHandler::onDrop(
     }
     return true;
   }
-
+  */
   return false;
 }
 

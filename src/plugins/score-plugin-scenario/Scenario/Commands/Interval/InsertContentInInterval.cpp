@@ -33,10 +33,10 @@ namespace Command
 {
 
 InsertContentInInterval::InsertContentInInterval(
-    QJsonObject&& sourceInterval,
+    const rapidjson::Value& sourceInterval,
     const IntervalModel& targetInterval,
     ExpandMode mode)
-    : m_source{std::move(sourceInterval)}
+    : m_source{clone(sourceInterval)}
     , m_target{std::move(targetInterval)}
     , m_mode{mode}
 {
@@ -50,13 +50,13 @@ InsertContentInInterval::InsertContentInInterval(
       std::back_inserter(curIds),
       [](const auto& proc) { return proc.id(); });
 
-  auto processes = m_source["Processes"].toArray();
-  for (int i = 0; i < processes.size(); i++)
+  auto processes = m_source["Processes"].GetArray();
+  for (std::size_t i = 0; i < processes.Size(); i++)
   {
-    auto obj = processes[i].toObject();
+    auto obj = processes[i].GetObject();
     Id<Process::ProcessModel> newId = getStrongId(curIds);
     Id<Process::ProcessModel> oldId
-        = Id<Process::ProcessModel>(obj["id"].toInt());
+        = Id<Process::ProcessModel>(obj["id"].GetInt());
     obj["id"] = newId.val();
     processes[i] = std::move(obj);
     m_processIds.insert({oldId, newId});
@@ -83,13 +83,14 @@ void InsertContentInInterval::undo(const score::DocumentContext& ctx) const
 
 void InsertContentInInterval::redo(const score::DocumentContext& ctx) const
 {
+  SCORE_ABORT;
   auto& pl = ctx.app.components.interfaces<Process::ProcessFactoryList>();
   auto& trg_interval = m_target.find(ctx);
-  const auto& json_array = m_source["Processes"].toArray();
+  const auto& json_array = m_source["Processes"].GetArray();
 
   for (const auto& json_vref : json_array)
   {
-    JSONObject::Deserializer deserializer{json_vref.toObject()};
+    JSONObject::Deserializer deserializer{json_vref};
     auto newproc = deserialize_interface(pl, deserializer, ctx, &trg_interval);
     if (newproc)
     {
@@ -111,11 +112,10 @@ void InsertContentInInterval::redo(const score::DocumentContext& ctx) const
       SCORE_TODO;
   }
 
-  auto sv_it = m_source.constFind(score::StringConstant().SmallViewRack);
-  if (sv_it != m_source.constEnd())
+  auto sv_it = m_source.FindMember(score::StringConstant().SmallViewRack);
+  if (sv_it != m_source.MemberEnd())
   {
-    Rack smallView;
-    fromJsonArray(sv_it->toArray(), smallView);
+    Rack smallView; smallView <<= JsonValue{sv_it->value};
     for (auto& sv : smallView)
     {
       if (sv.frontProcess)
@@ -129,7 +129,7 @@ void InsertContentInInterval::redo(const score::DocumentContext& ctx) const
       trg_interval.addSlot(sv);
     }
   }
-  if (json_array.size() > 0 && !trg_interval.smallViewVisible())
+  if (json_array.Size() > 0 && !trg_interval.smallViewVisible())
     trg_interval.setSmallViewVisible(true);
 }
 

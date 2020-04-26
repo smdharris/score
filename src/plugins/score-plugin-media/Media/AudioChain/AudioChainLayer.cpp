@@ -4,7 +4,6 @@
 
 #include <QFile>
 #include <QFileInfo>
-#include <QJsonDocument>
 #include <QTimer>
 #include <QUrl>
 
@@ -218,6 +217,8 @@ void Presenter::parentGeometryChanged() {}
 
 void Presenter::on_drop(const QMimeData& mime, int pos)
 {
+  SCORE_ABORT;
+  /*
   const auto& ctx = context().context;
   const auto& model = static_cast<const ChainProcess&>(m_process);
   if (mime.hasFormat(score::mime::processdata()))
@@ -320,6 +321,7 @@ void Presenter::on_drop(const QMimeData& mime, int pos)
       }
     }
   }
+  */
 }
 
 }

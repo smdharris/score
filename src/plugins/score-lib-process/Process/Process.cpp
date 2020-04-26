@@ -203,6 +203,8 @@ Process::Outlet* ProcessModel::outlet(const Id<Process::Port>& p) const
 
 void ProcessModel::loadPreset(const Preset& preset)
 {
+  SCORE_ABORT;
+  /*
   auto ctrls = preset.data["Controls"].toArray();
 
   for(const auto& json_val : ctrls) {
@@ -220,11 +222,14 @@ void ProcessModel::loadPreset(const Preset& preset)
       }
     }
   }
+  */
 }
 
 Preset ProcessModel::savePreset() const noexcept
 {
+  SCORE_ABORT;
   Preset p;
+  /*
   p.name = this->metadata().getName();
   p.key.key = this->concreteKey();
 
@@ -240,7 +245,7 @@ Preset ProcessModel::savePreset() const noexcept
     }
   }
   p.data["Controls"] = values;
-
+  */
   return p;
 }
 

@@ -303,13 +303,18 @@ void ProcessModel::setTween(bool tween)
 
 void ProcessModel::loadPreset(const Process::Preset& preset)
 {
+  SCORE_ABORT;
+  /*
   m_curve->clear();
-  JSONObjectWriter{preset.data["Curve"].toObject()}.write(*m_curve);
+  JSONObjectWriter{preset.data["Curve"]}.write(*m_curve);
+  */
 }
 
 Process::Preset ProcessModel::savePreset() const noexcept
 {
+  SCORE_ABORT;
   Process::Preset p;
+  /*
   p.name = this->metadata().getName();
   p.key = {this->concreteKey(), {}};
 
@@ -317,6 +322,7 @@ Process::Preset ProcessModel::savePreset() const noexcept
   r.read(*m_curve);
 
   p.data["Curve"] = r.obj;
+  */
   return p;
 }
 

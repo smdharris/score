@@ -225,15 +225,15 @@ SCORE_LIB_PROCESS_EXPORT void
 JSONObjectReader::read<Process::Enum>(const Process::Enum& p)
 {
   read((const Process::ControlInlet&) p);
-  obj["Values"] = toJsonValueArray(p.values);
-  obj["Pixmaps"] = toJsonValueArray(p.pixmaps);
+  obj["Values"] = p.values;
+  obj["Pixmaps"] = p.pixmaps;
 }
 template <>
 SCORE_LIB_PROCESS_EXPORT void
 JSONObjectWriter::write<Process::Enum>(Process::Enum& p)
 {
-  p.values = fromJsonValueArray<decltype(p.values)>(obj["Values"].toArray());
-  p.pixmaps = fromJsonValueArray<decltype(p.pixmaps)>(obj["Pixmaps"].toArray());
+  p.values <<= obj["Values"];
+  p.pixmaps <<= obj["Pixmaps"];
 }
 
 template <>
@@ -281,13 +281,13 @@ SCORE_LIB_PROCESS_EXPORT void
 JSONObjectReader::read<Process::ComboBox>(const Process::ComboBox& p)
 {
   read((const Process::ControlInlet&) p);
-  obj["Values"] = toJsonValueArray(p.alternatives);
+  obj["Values"] = p.alternatives;
 }
 template <>
 SCORE_LIB_PROCESS_EXPORT void
 JSONObjectWriter::write<Process::ComboBox>(Process::ComboBox& p)
 {
-  p.alternatives = fromJsonValueArray<decltype(p.alternatives)>(obj["Values"].toArray());
+  p.alternatives <<= obj["Values"];
 }
 template <>
 SCORE_LIB_PROCESS_EXPORT void
@@ -369,16 +369,4 @@ SCORE_LIB_PROCESS_EXPORT void
 DataStreamWriter::write<QString>(QString& p)
 {
   m_stream >> p;
-}
-template <>
-SCORE_LIB_PROCESS_EXPORT void
-JSONValueReader::read<QString>(const QString& p)
-{
-  val = p;
-}
-template <>
-SCORE_LIB_PROCESS_EXPORT void
-JSONValueWriter::write<QString>(QString& p)
-{
-  p = val.toString();
 }

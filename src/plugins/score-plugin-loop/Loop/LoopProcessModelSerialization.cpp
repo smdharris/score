@@ -36,8 +36,8 @@ template <>
 void JSONObjectReader::read(const Loop::ProcessModel& proc)
 {
   readFrom(static_cast<const Scenario::BaseScenarioContainer&>(proc));
-  obj["Inlet"] = toJsonObject(*proc.inlet);
-  obj["Outlet"] = toJsonObject(*proc.outlet);
+  obj["Inlet"] = *proc.inlet;
+  obj["Outlet"] = *proc.outlet;
 }
 
 template <>
@@ -45,11 +45,11 @@ void JSONObjectWriter::write(Loop::ProcessModel& proc)
 {
   writeTo(static_cast<Scenario::BaseScenarioContainer&>(proc));
   {
-    JSONObjectWriter writer{obj["Inlet"].toObject()};
+    JSONObjectWriter writer{obj["Inlet"]};
     proc.inlet = Process::load_audio_inlet(writer, &proc);
   }
   {
-    JSONObjectWriter writer{obj["Outlet"].toObject()};
+    JSONObjectWriter writer{obj["Outlet"]};
     proc.outlet = Process::load_audio_outlet(writer, &proc);
   }
 }

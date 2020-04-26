@@ -52,7 +52,9 @@ bool MessageDropHandler::drop(
           QFileInfo{f}.suffix() == "cues" && f.open(QIODevice::ReadOnly))
       {
         State::MessageList sub;
-        fromJsonArray(QJsonDocument::fromJson(f.readAll()).array(), sub);
+        auto json = readJson(f.readAll());
+        JSONObjectWriter wr{json};
+        sub <<= JsonValue{wr.base};
         ml += sub;
       }
     }

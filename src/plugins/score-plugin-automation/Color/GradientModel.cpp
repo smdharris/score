@@ -139,21 +139,17 @@ void DataStreamWriter::write(Gradient::ProcessModel& autom)
 template <>
 void JSONObjectReader::read(const Gradient::ProcessModel& autom)
 {
-  obj["Outlet"] = toJsonObject(*autom.outlet);
-  JSONValueReader v{};
-  v.readFrom(autom.m_colors);
-  obj["Gradient"] = v.val;
+  obj["Outlet"] = *autom.outlet;
+  obj["Gradient"] = autom.m_colors;
   obj["Tween"] = autom.tween();
 }
 
 template <>
 void JSONObjectWriter::write(Gradient::ProcessModel& autom)
 {
-  JSONObjectWriter writer{obj["Outlet"].toObject()};
+  JSONObjectWriter writer{obj["Outlet"]};
   autom.outlet = Process::load_value_outlet(writer, &autom);
 
   autom.setTween(obj["Tween"].toBool());
-  JSONValueWriter v{};
-  v.val = obj["Gradient"];
-  v.writeTo(autom.m_colors);
+  autom.m_colors <<= obj["Gradient"];
 }

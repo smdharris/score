@@ -28,8 +28,10 @@ void DataStreamWriter::write(ObjectIdentifier& obj)
 template <>
 void JSONObjectReader::read(const ObjectIdentifier& id)
 {
+  stream.StartObject();
   obj[strings.ObjectName] = id.objectName();
   obj[strings.ObjectId] = id.id();
+  stream.EndObject();
 }
 
 template <>

@@ -411,7 +411,7 @@ void DataStreamWriter::write(Media::Faust::FaustEffectModel& eff)
 template <>
 void JSONObjectReader::read(const Media::Faust::FaustEffectModel& eff)
 {
-  readPorts(obj, eff.m_inlets, eff.m_outlets);
+  readPorts(*this, eff.m_inlets, eff.m_outlets);
   obj["Text"] = eff.text();
 }
 
@@ -419,7 +419,7 @@ template <>
 void JSONObjectWriter::write(Media::Faust::FaustEffectModel& eff)
 {
   writePorts(
-      obj,
+      *this,
       components.interfaces<Process::PortFactoryList>(),
       eff.m_inlets,
       eff.m_outlets,

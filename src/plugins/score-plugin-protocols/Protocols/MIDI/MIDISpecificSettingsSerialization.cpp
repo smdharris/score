@@ -24,7 +24,7 @@ void DataStreamWriter::write(Protocols::MIDISpecificSettings& n)
 template <>
 void JSONObjectReader::read(const Protocols::MIDISpecificSettings& n)
 {
-  obj["IO"] = toJsonValue(n.io);
+  obj["IO"] = n.io;
   obj["Endpoint"] = n.endpoint;
   obj["Port"] = (int)n.port;
   obj["CreateWholeTree"] = n.createWholeTree;
@@ -33,11 +33,11 @@ void JSONObjectReader::read(const Protocols::MIDISpecificSettings& n)
 template <>
 void JSONObjectWriter::write(Protocols::MIDISpecificSettings& n)
 {
-  fromJsonValue(obj["IO"], n.io);
+  obj["IO"], n.io;
   n.endpoint = obj["Endpoint"].toString();
   n.port = obj["Port"].toInt();
-  if (obj.contains("CreateWholeTree"))
-    n.createWholeTree = obj["CreateWholeTree"].toBool();
+  if (auto it = obj.tryGet("CreateWholeTree"))
+    n.createWholeTree = it->toBool();
   else
     n.createWholeTree = true;
 }

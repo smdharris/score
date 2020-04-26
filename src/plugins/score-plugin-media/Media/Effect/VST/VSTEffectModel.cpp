@@ -744,7 +744,9 @@ void DataStreamWriter::write(Media::VST::VSTEffectModel& eff)
 template <>
 void JSONObjectReader::read(const Media::VST::VSTEffectModel& eff)
 {
-  readPorts(obj, eff.m_inlets, eff.m_outlets);
+  readPorts(*this, eff.m_inlets, eff.m_outlets);
+  SCORE_ABORT;
+  /*
   obj["EffectId"] = eff.m_effectId;
 
   if (eff.fx)
@@ -768,18 +770,21 @@ void JSONObjectReader::read(const Media::VST::VSTEffectModel& eff)
       obj["Params"] = std::move(arr);
     }
   }
+  */
 }
 
 template <>
 void JSONObjectWriter::write(Media::VST::VSTEffectModel& eff)
 {
   writePorts(
-      obj,
+      *this,
       components.interfaces<Process::PortFactoryList>(),
       eff.m_inlets,
       eff.m_outlets,
       &eff);
 
+  SCORE_ABORT;
+  /*
   auto it = obj.find("EffectId");
   if (it != obj.end())
   {
@@ -837,6 +842,7 @@ void JSONObjectWriter::write(Media::VST::VSTEffectModel& eff)
       }
     }
   });
+  */
 }
 
 template <>

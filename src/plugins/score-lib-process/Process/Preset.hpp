@@ -1,6 +1,5 @@
 #pragma once
 #include <Process/ProcessMetadata.hpp>
-#include <QJsonObject>
 #include <optional>
 namespace Process
 {
@@ -29,24 +28,27 @@ struct SCORE_LIB_PROCESS_EXPORT Preset
 {
   QString name;
   ProcessIdentifier key;
-  QJsonObject data;
+  QByteArray data;
 
-  static std::optional<Process::Preset> fromJson(
+  static std::shared_ptr<Process::Preset> fromJson(
       const Process::ProcessFactoryList& procs,
-      const QJsonObject& obj) noexcept;
+      const QByteArray& obj) noexcept;
 
-  QJsonObject toJson() const noexcept;
+  QByteArray toJson() const noexcept;
 
   friend bool operator==(const Preset& lhs, const Preset& rhs) noexcept
   {
+    SCORE_ABORT;
     return lhs.name == rhs.name && lhs.key == rhs.key && lhs.data == rhs.data;
   }
   friend bool operator!=(const Preset& lhs, const Preset& rhs) noexcept
   {
+    SCORE_ABORT;
     return !(lhs == rhs);
   }
   friend bool operator<(const Preset& lhs, const Preset& rhs) noexcept
   {
+    SCORE_ABORT;
     return lhs.key < rhs.key;
   }
 };

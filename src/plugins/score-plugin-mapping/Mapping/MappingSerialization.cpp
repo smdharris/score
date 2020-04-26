@@ -54,9 +54,9 @@ void DataStreamWriter::write(Mapping::ProcessModel& autom)
 template <>
 void JSONObjectReader::read(const Mapping::ProcessModel& autom)
 {
-  obj["Inlet"] = toJsonObject(*autom.inlet);
-  obj["Outlet"] = toJsonObject(*autom.outlet);
-  obj["Curve"] = toJsonObject(autom.curve());
+  obj["Inlet"] = *autom.inlet;
+  obj["Outlet"] = *autom.outlet;
+  obj["Curve"] = autom.curve();
 
   obj["SourceMin"] = autom.sourceMin();
   obj["SourceMax"] = autom.sourceMax();
@@ -69,15 +69,15 @@ template <>
 void JSONObjectWriter::write(Mapping::ProcessModel& autom)
 {
   {
-    JSONObjectWriter writer{obj["Inlet"].toObject()};
+    JSONObjectWriter writer{obj["Inlet"]};
     autom.inlet = Process::load_value_inlet(writer, &autom);
   }
   {
-    JSONObjectWriter writer{obj["Outlet"].toObject()};
+    JSONObjectWriter writer{obj["Outlet"]};
     autom.outlet = Process::load_value_outlet(writer, &autom);
   }
 
-  JSONObject::Deserializer curve_deser{obj["Curve"].toObject()};
+  JSONObject::Deserializer curve_deser{obj["Curve"]};
   autom.setCurve(new Curve::Model{curve_deser, &autom});
 
   autom.setSourceMin(obj["SourceMin"].toDouble());
